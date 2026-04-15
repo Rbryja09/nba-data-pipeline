@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import pandas as pd
 from nba_api.stats.endpoints import leaguedashplayerstats, commonteamroster
@@ -18,6 +19,7 @@ def player_physical_stats():
     team_list = []
     nba_teams = teams.get_teams()
    
+
     for team in nba_teams:
     
         player_stats = commonteamroster.CommonTeamRoster(
@@ -25,21 +27,32 @@ def player_physical_stats():
             team_id = team['id']
         )
         
-        df = player_stats.get_data_frames()[0]
+        stats_dictionary = player_stats.get_data_frames()[0]
+        team_list.append(stats_dictionary[['PLAYER','HEIGHT']])
+        
+        time.sleep(0.8)
+
+    df = pd.concat(team_list,ignore_index=True)
     
-
-
-    return team_list
+    return df 
 
 
 def average_nba_height():
-    df = common_player_stats()
-    avg_height = np.mean(df['height'])    
-    return avg_height
+    player_height = player_physical_stats()
+
+    return player_height
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
-    print(player_physical_stats())
+    print(average_nba_height())
 
+   
 
-    
