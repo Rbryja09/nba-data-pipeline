@@ -1,3 +1,4 @@
+import math
 import time
 import numpy as np
 import pandas as pd
@@ -21,7 +22,7 @@ def player_physical_stats():
     team_count = len(nba_teams)
     max_attempts = 3
 
-    for index, team in enumerate(nba_teams, start=1):
+    for index, team in enumerate(nba_teams[0:2], start=1):
         for n in range(max_attempts):
             try:
                 player_stats = commonteamroster.CommonTeamRoster(
@@ -46,20 +47,35 @@ def player_physical_stats():
     return df 
 
 
-def average_nba_height():
+def average_nba_height_initial_try():
     player_height = player_physical_stats()
+    sum_height = 0
 
-    return player_height
+    for n in player_height['HEIGHT']:
+        feet, inches = n.split('-')
+        total_inches = int(feet) * 12 + int(inches)
+        sum_height += total_inches
+
+    avg_height_inches = sum_height / len(player_height)
+    
+    feet = int(avg_height_inches // 12)
+    inches = int(round(avg_height_inches % 12, 0))
+
+    avg_height = f"Average NBA Height is: {feet}'{inches}\""
+
+    return avg_height
 
 
+def average_nba_height_pandas_way():
 
-
-
-
-
-
+    """
+        EDGE CASES TO CONSIDER
+    what if height is missing?
+    what if there is whitespace?
+    what if the formatting isnt the same for some entries?
+    """
 
 
 if __name__ == '__main__':
-    print(average_nba_height())
+    print(average_nba_height_initial_try())
 
