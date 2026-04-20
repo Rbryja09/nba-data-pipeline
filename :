@@ -49,21 +49,13 @@ def player_physical_stats():
 
 def average_nba_height_initial_try():
     player_height = player_physical_stats()
-    sum_height = 0
 
-    for n in player_height['HEIGHT']:
-        feet, inches = n.split('-')
-        total_inches = int(feet) * 12 + int(inches)
-        sum_height += total_inches
+    player_height[['feet', 'inches']] = player_height['HEIGHT'].str.split('-', expand=True)
+    print(player_height['feet'].dtype)
+    print(player_height['inches'].dtype)
+#    player_height['height_inches'] = player_height['feet'].cat * 12 + player_height['inches'].cat
 
-    avg_height_inches = sum_height / len(player_height)
-    
-    feet = int(avg_height_inches // 12)
-    inches = int(round(avg_height_inches % 12, 0))
-
-    avg_height = f"Average NBA Height is: {feet}'{inches}\""
-
-    return avg_height
+    print(player_height)
 
 def average_nba_height_pandas_way():
 
@@ -74,48 +66,7 @@ def average_nba_height_pandas_way():
     what if the formatting isnt the same for some entries?
     """
 
-    player_height = player_physical_stats()
-    
-    split_height = player_height['HEIGHT'].str.split('-', expand=True).astype(int)
-    total_inches = split_height[0] * 12 + split_height[1]
-
-    avg_inches = total_inches.agg('mean')
-
-    feet = int(avg_inches // 12)
-    inches = int(round(avg_inches % 12, 0))
-
-    avg_height = f"Average NBA Height is: {feet}'{inches}\""
-    
-    return avg_height
-
-
-
 
 if __name__ == '__main__':
-    print(average_nba_height_pandas_way())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    print(average_nba_height_initial_try())
 
